@@ -1,0 +1,7 @@
+{
+  "name": "learn-notes",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

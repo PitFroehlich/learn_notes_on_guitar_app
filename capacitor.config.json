@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "learn-notes",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
