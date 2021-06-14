@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
-interface GuitarTab {
+export interface GuitarTab {
   string: number;
   fret: number;
 }
+
+interface Guitar {
+  tuning: Array<Note>
+}
+
+interface Note {
+  pitch: string;
+  octave: number;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,21 +24,46 @@ interface GuitarTab {
 
 
 export class DataService {
-  public guitarTab = {
-    string: 2,
-    fret: 0
-  }
+  private note = new BehaviorSubject<Note>({pitch: 'E', octave: 3});
+  noteObj = this.note.asObservable();
 
-  public bpm: number = 0;
-  public note: string;
+  private tab = new BehaviorSubject<GuitarTab>({string: 1, fret: 0});
+  tabs = this.tab.asObservable();
+
+  private guitar = [
+    {pitch: 'E', octave: 4},
+    {pitch: 'B', octave: 3},
+    {pitch: 'G', octave: 3},
+    {pitch: 'D', octave: 3},
+    {pitch: 'A', octave: 2},
+    {pitch: 'E', octave: 2},
+  ]
+
+  
   constructor() { }
 
-  getGuitarTab() {
-    return this.guitarTab;
+  changeString(u: number) {
+    this.tab.next({string: u, fret: this.calculateTab(u) })
   }
-  setGuitarTab(guitarTab: GuitarTab){
-    this.guitarTab = guitarTab;
+  changeNote(u: Note) {
+    this.note.next(u);
+    this.changeString(this.tab.getValue().string);
+  }
+  
+  noteToMidi(note: Note){
+    const notes = ['C','C#/Db', 'D','D#/Db','E', 'F','F#/Gb','G','G#/Ab', 'A','A#/Bb','B']
+    let number = notes.indexOf(note.pitch);
+    let octave = note.octave;
+    let midi = number + octave * 12 + 12;
+    return midi;
   }
 
+  calculateTab(string: number){
+    let midi = this.noteToMidi(this.note.getValue());
+    let tuningNote = this.guitar[string - 1];
+    let tuningNoteMidi = this.noteToMidi(tuningNote);
+    let fret = midi - tuningNoteMidi;
+    return fret;
+  }
 
 }

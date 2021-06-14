@@ -3,7 +3,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "files": [
     "src/main.ts",
@@ -11,5 +13,9 @@
   ],
   "include": [
     "src/**/*.d.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  }
 }

@@ -1,22 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { DataService } from 'src/app/services/data.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DataService, GuitarTab } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-button-test',
-  providers: [DataService],
   templateUrl: './button-test.component.html',
   styleUrls: ['./button-test.component.scss'],
 })
-export class ButtonTestComponent implements OnInit {
+export class ButtonTestComponent implements OnInit, OnDestroy, OnDestroy {
+
+  guitarTab: GuitarTab;
+  subscription: Subscription;
 
   constructor(private data: DataService) { }
 
-  changeString() {    
-    this.data.guitarTab.string += 1;
-    console.log(this.data.guitarTab);
-    
+  ngOnInit() {
+    this.subscription = this.data.tabs.subscribe(s => this.guitarTab = s)
   }
 
-  ngOnInit() {}
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  updateNote() {
+    let pitch = (<HTMLInputElement>document.getElementById('pitch')).value;
+    let octave = parseInt((<HTMLInputElement>document.getElementById('octave')).value);
+    this.data.changeNote({pitch: pitch, octave: octave})
+    console.log(this.guitarTab)
+  }
 
 }

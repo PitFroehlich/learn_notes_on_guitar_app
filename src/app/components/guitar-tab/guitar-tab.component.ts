@@ -1,22 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { DataService } from 'src/app/services/data.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DataService, GuitarTab } from 'src/app/services/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-guitar-tab',
-  providers: [DataService],
   templateUrl: './guitar-tab.component.html',
   styleUrls: ['./guitar-tab.component.scss'],
 })
-export class GuitarTabComponent implements OnInit {
+export class GuitarTabComponent implements OnInit, OnDestroy {
 
-  private guitarTab = {
-    string: 2,
-    fret: 0
-  }
+  string: GuitarTab;
+  subscription: Subscription;
+
+
   constructor(private data: DataService) {
-    console.log(this.data.guitarTab);
+    // console.log(this.data.guitarTab);
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.subscription = this.data.tabs.subscribe(s => this.string = s)
+  }
+  
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
 }
