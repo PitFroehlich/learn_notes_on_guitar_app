@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Pitch } from 'opensheetmusicdisplay/build/dist/src';
+//import { Pitch } from 'opensheetmusicdisplay/build/dist/src';
 import { Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
@@ -8,10 +10,10 @@ export interface GuitarTab {
 }
 
 interface Guitar {
-  tuning: Array<Note>
-}
+  tuning: Array<Note>;
+} 
 
-interface Note {
+export interface Note {
   pitch: string;
   octave: number;
 }
@@ -24,6 +26,8 @@ interface Note {
 
 
 export class DataService {
+
+
   private note = new BehaviorSubject<Note>({pitch: 'E', octave: 3});
   noteObj = this.note.asObservable();
 
@@ -46,8 +50,10 @@ export class DataService {
     this.tab.next({string: u, fret: this.calculateTab(u) })
   }
   changeNote(u: Note) {
-    this.note.next(u);
+    this.note.next({pitch: u.pitch, octave: u.octave});
+    console.log(this.note.value);
     this.changeString(this.tab.getValue().string);
+  
   }
   
   noteToMidi(note: Note){
@@ -63,7 +69,10 @@ export class DataService {
     let tuningNote = this.guitar[string - 1];
     let tuningNoteMidi = this.noteToMidi(tuningNote);
     let fret = midi - tuningNoteMidi;
+    //console.log(this.note.value)
     return fret;
+    
+
   }
 
 }
