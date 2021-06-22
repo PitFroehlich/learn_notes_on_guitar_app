@@ -8,4 +8,4 @@ Deshalb sind sie nicht zu sehen im Moment lol (also Befehl sonst auskommentieren
 Dokumentiert hier --> https://github.com/0xfe/vexflow/issues/538 ist der Post vom  27 Feb 2017 von gristow 
 Habe auch was zu Animation gefunden, vielleicht irgendwann mal nützlich --> https://github.com/0xfe/vexflow/wiki/Animation-with-VexFlow-&-CSS
 
-isNote war eigentlich als Zähler gedacht, damit nach dem Schreiben einer neuen Note die ate gelöscht wird
+isNote war eigentlich als Zähler gedacht, damit nach dem Schreiben einer neuen Note die alte gelöscht wird
