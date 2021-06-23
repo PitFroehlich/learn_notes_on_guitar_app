@@ -15,6 +15,7 @@ export class TabComponent implements OnInit {
 
   tabs: GuitarTab;
   subscription: Subscription;
+  group = null;
   VF;
   renderer;
 
@@ -42,17 +43,22 @@ export class TabComponent implements OnInit {
 
     // And get a drawing context:
     var context = this.renderer.getContext();
-    var stave = new this.VF.TabStave(10, 40, 400);
-    stave.addClef("tab").setContext(context).draw();
+    var stave = new this.VF.TabStave(10, 40, 400).addClef("tab");
+    if (this.group == null) {
+      stave.setContext(context).draw();
+    } else {
+      context.svg.removeChild(this.group);
+      
+    }
 
     var notes = [
-      // A single note with a harsh vibrato
       new this.VF.TabNote({
         positions: [{str: this.tabs.string, fret: this.tabs.fret}],
         duration: "h"})
     ];
-
+    this.group = context.openGroup();
     this.VF.Formatter.FormatAndDraw(context, stave, notes);
+    context.closeGroup();
         
    }
 

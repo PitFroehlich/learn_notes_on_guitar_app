@@ -23,6 +23,7 @@ export class NoteTabComponent implements OnInit, OnDestroy {
   isNote: number = 0;
   VF;
   renderer;
+  group = null;
   
 
   constructor(private data: DataService) {
@@ -60,29 +61,41 @@ export class NoteTabComponent implements OnInit, OnDestroy {
     this.renderer.resize(500, 500);
 
     // And get a drawing context:
-    
     var context = this.renderer.getContext();
+    let svgNoteGroups;
+    
+  
+    // if (this.isNote > 1){
+    //   context.svg.removeChild(svgNoteGroups[0]);
+    //   this.isNote -= 1;
+    // }
     var stave = new this.VF.Stave(10, 40, 400).addClef("treble");
-    stave.setContext(context).draw();
+    if (this.group == null) {
+      stave.setContext(context).draw();
+    } else {
+      context.svg.removeChild(this.group);
+      
+    }
+    
+    
     var notes = [
         new this.VF.StaveNote({clef: "treble", keys: [this.key], duration: "h" }), 
     ]; 
     
-    const svgNoteGroups = notes.map(staveNote => {
-      const group = context.openGroup();
+    svgNoteGroups = notes.map(staveNote => {
+      this.group = context.openGroup();
+      console.log("It draws!")
       this.VF.Formatter.FormatAndDraw(context, stave, notes);
       staveNote.setContext(context).draw();
       context.closeGroup();
       this.isNote += 1;
-    return group;
-});
+    // return group;
+    });
 
     console.log(this.data);
     console.log(svgNoteGroups[0] + 'Hello');
-    //soll die Note eigentlich verschwinden lassen
-    if (this.isNote > 1){
-      context.svg.removeChild(svgNoteGroups[0]);
-    }
+    // soll die Note eigentlich verschwinden lassen
+    
     
     
    }
